@@ -17,6 +17,9 @@
     "express-ejs-layouts": "^2.5.1",
     "mongoose": "^8.13.2",
     "node-cron": "^3.0.3",
-    "serverless-http": "^3.0.1"
+    "serverless-http": "^3.0.1"       // ✅ ajouté
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
   }
 }
