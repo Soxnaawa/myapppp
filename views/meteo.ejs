@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sunu Meteo</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      background-color: #e0f0ff; /* bleu clair */
+    }
+
+    main {
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #0077b6;
+      margin-bottom: 30px;
+    }
+
+    form {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      width: 250px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #0077b6;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #005f87;
+    }
+
+    .reset-link {
+      margin-bottom: 20px;
+    }
+
+    .card {
+      display: none;
+      background-color: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      margin: 0 auto;
+      width: 90%;
+      max-width: 500px;
+    }
+
+    .card.active {
+      display: block;
+    }
+
+    .weather-icon {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 15px;
+    }
+
+    .nav-buttons {
+      margin-top: 20px;
+    }
+
+    .nav-buttons button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h2>Données météo par région</h2>
+
+    <!-- Recherche -->
+    <form method="GET" action="/meteo">
+      <input type="text" name="region" placeholder="Rechercher une région..." value="<%= regionRecherchee || '' %>">
+      <button type="submit">Rechercher</button>
+    </form>
+
+    <% if (regionRecherchee && donnees.length > 0) { %>
+      <div class="reset-link">
+        <a href="/meteo">Voir toutes les régions</a>
+      </div>
+    <% } %>
+
+    <% if (donnees.length === 0) { %>
+      <p>Aucune donnée trouvée pour "<%= regionRecherchee %>"</p>
+    <% } else { %>
+      <% donnees.forEach((d, index) => { %>
+        <div class="card <%= index === 0 ? 'active' : '' %>">
+          <!-- Affichage de l'icône météo -->
+          <% if (d.icon) { %>
+            <img 
+              class="weather-icon" 
+              src="https://openweathermap.org/img/wn/<%= d.icon %>@2x.png" 
+              alt="Icône météo <%= d.condition %>"
+              title="<%= d.description %>"
+            />
+          <% } %>
+
+          <h3><%= d.region %></h3>
+          <p><strong>Température :</strong> <%= d.temperature %>°C</p>
+          <p><strong>Humidité :</strong> <%= d.humidite %>%</p>
+          <p><strong>Pression :</strong> <%= d.pression %> hPa</p>
+          <% if (d.vent) { %>
+            <p><strong>Vent :</strong> <%= d.vent.vitesse %> m/s - <%= d.vent.direction %>°</p>
+          <% } else { %>
+            <p><strong>Vent :</strong> Donnée non disponible</p>
+          <% } %>
+          <p><strong>Condition :</strong> <%= d.condition %></p>
+          <p><strong>Description :</strong> <%= d.description %></p>
+          <p><strong>Date :</strong> <%= new Date(d.date).toLocaleString('fr-FR') %></p>
+        </div>
+      <% }) %>
+
+      <div class="nav-buttons">
+        <button id="prevBtn">⬅️ Précédent</button>
+        <button id="nextBtn">Suivant ➡️</button>
+      </div>
+    <% } %>
+  </main>
+
+  <script>
+    const cards = document.querySelectorAll('.card');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    let currentIndex = 0;
+
+    function updateView() {
+      cards.forEach((card, index) => {
+        card.classList.toggle('active', index === currentIndex);
+      });
+      if (prevBtn && nextBtn) {
+        prevBtn.disabled = currentIndex === 0;
+        nextBtn.disabled = currentIndex === cards.length - 1;
+      }
+    }
+
+    if (prevBtn && nextBtn) {
+      prevBtn.addEventListener('click', () => {
+        if (currentIndex > 0) {
+          currentIndex--;
+          updateView();
+        }
+      });
+
+      nextBtn.addEventListener('click', () => {
+        if (currentIndex < cards.length - 1) {
+          currentIndex++;
+          updateView();
+        }
+      });
+
+      updateView();
+    }
+  </script>
+</body>
+</html>

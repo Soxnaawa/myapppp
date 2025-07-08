@@ -1,0 +1,75 @@
+<head>
+  <meta charset="UTF-8">
+  <title>App Météo</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background-color: #e0f0ff;
+    }
+
+    header {
+      background-color: #0077b6;
+      color: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.6rem;
+    }
+
+    nav {
+      display: flex;
+      gap: 15px;
+    }
+
+    nav a {
+      text-decoration: none;
+      background-color: white;
+      color: #0077b6;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    nav a:hover {
+      background-color: #caf0f8;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      margin-top: 40px;
+      background-color: #0077b6;
+      color: white;
+    }
+
+    main {
+      padding: 30px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+     <h1>Sunu Météo</h1>
+    <nav>
+      <a href="/">Accueil</a>
+      <a href="/meteo">Météo</a>
+    </nav>
+   
+
+  </header>
+
+  <main>
+    <%- body %>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 - Mon App Météo</p>
+  </footer>
+</body>
